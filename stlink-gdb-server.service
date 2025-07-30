@@ -1,0 +1,20 @@
+[Unit]
+Description=STLink GDB Server
+After=network.target
+#After=network-online.target
+
+[Service]
+WorkingDirectory=/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin
+#ExecStart=/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver.sh
+ExecStart=/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver -c config.txt
+Restart=always
+#RestartSec=1
+RestartSec=100ms
+Type=exec
+StandardOutput=journal+console
+StandardError=journal+console
+KillSignal=SIGINT
+TimeoutStopSec=100ms
+
+[Install]
+WantedBy=multi-user.target
