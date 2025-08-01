@@ -81,10 +81,10 @@ That is all you need on your PC.
 I'm using an RP5 8GB with the official Raspberry Pi OS Lite (64-bit) (Released : 2025-05-13 at time of writing).
 You can find instructions on how to install the OS on the RP5 on their official site:<br>
 (https://www.raspberrypi.com/documentation/computers/getting-started.html)<br>
-I've used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) to install the OS.
+I've used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) to install the OS.<br>
+I've enabled SSH in the RP Imager software and selected "Use password authentication". This way, when we later enable logging on using public-key authentication, we can, by default, still use a username and password to logon if we choose to.
 
 #### 2.1 Configure SSH to authenticate by using the key-pair (Optional)
-I've enabled SSH in the RP Imager software and allowed both logon through the use of the key-pair and a password.
 
 ##### 2.1.1 Generate a key-pair on your PC
 I've generated a ECDSA key-pair on my Windows PC. You only need one such key-pair per PC.<br>
