@@ -1277,8 +1277,7 @@ If you need a development tool chain, you can try binutils-arm-none-eabi. (sudo 
 
 [GitHub stlink-org](https://github.com/stlink-org/stlink?tab=readme-ov-file)
 
-
-<hr style="border-top:3px double #666; margin:1em 0;">
+---
 
 ## 📜 Change History
 
@@ -1287,7 +1286,7 @@ If you need a development tool chain, you can try binutils-arm-none-eabi. (sudo 
 | 30-7-2025  | Initial public release               |
 | 2-8-2025   | Added instructions for RP Zero 2W    |
 
-
+---
 
 
 
