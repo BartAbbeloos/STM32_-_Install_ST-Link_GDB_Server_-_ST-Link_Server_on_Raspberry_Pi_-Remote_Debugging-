@@ -27,6 +27,9 @@ So, let's give it a shot...
 I'm also not professional Embedded Systems Engineer, just a humble wannabe who is playing around after hours out of interest in the matter. So take it with a grain of salt if not all terminology etc. is 100% correct.<br>
 > Use it at your own risk. (If there would be any...)
 
+> [!NOTE]
+> Keep in mind that if you use a RaspBerry Pi Zero 2W, this device only has one mirco USB port. If you prefer to use a cabled network connection, you've probably need to use this single USB port for conecting the USB to RJ46 dongle leaving you no free USB ports for your USB debugger. You will need to use an USB hub so you have some extra USB ports available for connecting the USB debugger hardware. Nice and cheap Raspberry Pi USB Hub Hat's are available that have the same size as the RaspBerry Pi Zero 2W PCB so you can place it on top, providing you 4 USB-A connections instead of 1 micro USB Connection.
+
 ## An overview of the final setup
 
 The STM32 development board (eg the Blue Pill, Black Pill or whatever) is connected through an ST-Link V2 or ST-Link V3 MINIE to the USB port of the RP. Other debuggers or programmers might also work but I've not tested them yet.<br>
