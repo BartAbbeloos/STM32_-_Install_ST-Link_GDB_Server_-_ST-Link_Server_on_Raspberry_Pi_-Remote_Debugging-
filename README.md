@@ -29,11 +29,11 @@ I'm also not professional Embedded Systems Engineer, just a humble wannabe who i
 
 ## An overview of the final setup
 
-The STM32 development board (eg the Blue Pill, Black Pill or whatever) is connected through an ST-Link V2 or ST-Link V3 MINIE to the USB port of the RP5. Other debuggers or programmers might also work but I've not tested them yet.
+The STM32 development board (eg the Blue Pill, Black Pill or whatever) is connected through an ST-Link V2 or ST-Link V3 MINIE to the USB port of the RP. Other debuggers or programmers might also work but I've not tested them yet.
 On the RP, the official Raspberry Pi OS Lite (64-bit) is installed. It will also work with the Raspberry Pi OS Full (64-bit) version (and probably with other Linux distro's too). But as a Linux newbee, I like the challenge to use the Lite version, that is without the desktop, just for the fun of it. (Or to keep the setup minimal and lean, if you do not see the 'fun' in this part.) By using the official Raspberry Pi OS (Debian based as far as I know), I am sure that all the RP hardware is (or should be) fully supported.
 The RP is connected to the network over Wifi or by using an UTP Cable directly connected. I prefer a wired connection, so that is what I used.
 We need to install some extra software from ST on this RP to be able to connect to this RP over the network from the STM32CubeIDE installed on our laptop. All the required software needed on the RP is bundled in one, free to download official package called STM32CubeCLT. Now, there is good news and some... not so good news about this. The good news is, there is a Linux (deb) version available. The 'not so good' news is that it is only available for x64 CPU architecture and my RP5 has a quad-core 64-bit Arm Cortex-A76 processor which uses the AArch64 / ARM64 CPU architecture. (It looks like all RP's till now uses this architecture too.) As I found in several forums, ST is not planning to publish ARM64 releases of their developing software any time soon. So this is an issue as ARM64 is not compatible with software compiled for x64 CPU's. But only at first sight... It seems that you can emulate a x64 environment to run x64 applications within an ARM64 CPU architecture with BOX64. So all hope is not lost.
-After all software is installed, you need to start the ST-Link GDB Server environment on the RP. This is, in short, the environment the STM32CubeIDE, installed on your computer, will connect to to upload and debug your project. I would prefer to connect everything to the RP, power it up and that's it. So after the installation I will configure Linux to automatically start the ST-Link GDB Server, so no manual intervention (except the power-on of the RP5) is needed anymore.
+After all software is installed, you need to start the ST-Link GDB Server environment on the RP. This is, in short, the environment the STM32CubeIDE, installed on your computer, will connect to to upload and debug your project. I would prefer to connect everything to the RP, power it up and that's it. So after the installation I will configure Linux to automatically start the ST-Link GDB Server, so no manual intervention (except the power-on of the RP) is needed anymore.
 
 ## Difference between ST-LINK Server and ST-Link GDB Server
 When I initially started with this setup I didn't realise there was a difference between ST-LINK Server and ST-Link GDB Server which was quite confusing.
@@ -210,7 +210,7 @@ cmake .. -DRPI5ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
 ```bash
 cmake .. -DRPI4ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
 ```
-(For RP3)
+(For RP3 / RP Zero 2W)
 ```bash
 cmake .. -DRPI3ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
 ```
