@@ -1284,8 +1284,8 @@ If you need a development tool chain, you can try binutils-arm-none-eabi. (sudo 
 
 | Date       | Description                          |
 |------------|--------------------------------------|
-| 2025-07-28 | Initial public release               |
-| 2025-08-02 | Added instructions for RP Zero 2W    |
+| 30-7-2025  | Initial public release               |
+| 2-8-2025   | Added instructions for RP Zero 2W    |
 
 
 
