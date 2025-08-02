@@ -18,7 +18,7 @@ This is a somewhat bulky solution as you always need the USB port of your PC/lap
 In case something goes electrically wrong, you are at risk of damaging the internal USB port of your PC/laptop.<br>
 I think it would be nice/handy if you could connect the STM32 development board in some way to your local network and use STM32CubeIDE, that is installed on your development PC, to connect remotly over the LAN, to that STM32 development board to upload and debug your projects. That all without connecting any extra hardware directly to your PC over USB.
 
-Sure, there are probably many easy ways to accomplish this, like installing STM32CubeCLT to a dedicated old x64 PC you might have laying around, gathering dust in the corner. But I recently bought a RaspBerry Pi 5 (RP5) 8GB and was wondering if I could use this instead. Not much memory is used during operation. I've even managed to get it also working on the RaspBerry Pi Zero 2W with only 512MB SDRAM. But some extra steps are required to get the installation process working (which are described furhter on in this document).
+Sure, there are probably many easy ways to accomplish this, like installing STM32CubeCLT to a dedicated old x64 PC you might have laying around, gathering dust in the corner. But I recently bought a RaspBerry Pi 5 (RP5) 8GB and was wondering if I could use this instead. Not much memory is used during operation. Later on, I've even managed to get it also working on the RaspBerry Pi Zero 2W with only 512MB SDRAM. But some extra steps are required to get the installation process working (which is also described furhter on in this document).<br>
 A RP is relative cheap (especially the RaspBerry Pi Zero 2W), small and consumes almost no power compared to a dedicated PC. It also has 5v and 3.3v output pins you can directly use to power your development board etc and it also has some extra onboard GPIO pins you can play around with if you ever feel the need for it (more like an optional bonus for free that comes along with it). If something goes wrong in your project, like a short circuit that releases the 'magic smoke', only your RP is at risk and this is relative cheap to replace compared to a PC.
 So, let's give it a shot...
 
@@ -29,11 +29,15 @@ I'm also not professional Embedded Systems Engineer, just a humble wannabe who i
 
 ## An overview of the final setup
 
-The STM32 development board (eg the Blue Pill, Black Pill or whatever) is connected through an ST-Link V2 or ST-Link V3 MINIE to the USB port of the RP. Other debuggers or programmers might also work but I've not tested them yet.
-On the RP, the official Raspberry Pi OS Lite (64-bit) is installed. It will also work with the Raspberry Pi OS Full (64-bit) version (and probably with other Linux distro's too). But as a Linux newbee, I like the challenge to use the Lite version, that is without the desktop, just for the fun of it. (Or to keep the setup minimal and lean, if you do not see the 'fun' in this part.) By using the official Raspberry Pi OS (Debian based as far as I know), I am sure that all the RP hardware is (or should be) fully supported.
+The STM32 development board (eg the Blue Pill, Black Pill or whatever) is connected through an ST-Link V2 or ST-Link V3 MINIE to the USB port of the RP. Other debuggers or programmers might also work but I've not tested them yet.<br>
+On the RP, the official Raspberry Pi OS Lite (64-bit) is installed. It will also work with the Raspberry Pi OS Full (64-bit) version (and probably with other Linux distro's too). But as a Linux newbee, I like the challenge to use the Lite version, that is without the desktop, just for the fun of it. (Or to keep the setup minimal and lean, if you do not see the 'fun' in this part.) By using the official Raspberry Pi OS (Debian based as far as I know), I'm sure that all the RP hardware is (or should be) fully supported.<br>
 The RP is connected to the network over Wifi or by using an UTP Cable directly connected. I prefer a wired connection, so that is what I used.
-We need to install some extra software from ST on this RP to be able to connect to this RP over the network from the STM32CubeIDE installed on our laptop. All the required software needed on the RP is bundled in one, free to download official package called STM32CubeCLT. Now, there is good news and some... not so good news about this. The good news is, there is a Linux (deb) version available. The 'not so good' news is that it is only available for x64 CPU architecture and my RP5 has a quad-core 64-bit Arm Cortex-A76 processor clocked at 2.4GHz (RP Zero 2W has a quad-core 64-bit ARM Cortex-A53 processor clocked at 1GHz) which uses the AArch64 / ARM64 CPU architecture. (It looks like all RP's till now uses this architecture too.) As I found in several forums, ST is not planning to publish ARM64 releases of their developing software any time soon. So this is an issue as ARM64 is not compatible with software compiled for x64 CPU's. But only at first sight... It seems that you can emulate a x64 environment to run x64 applications within an ARM64 CPU architecture with BOX64. So all hope is not lost.
-After all software is installed, you need to start the ST-Link GDB Server environment on the RP. This is, in short, the environment the STM32CubeIDE, installed on your computer, will connect to to upload and debug your project. I would prefer to connect everything to the RP, power it up and that's it. So after the installation I will configure Linux to automatically start the ST-Link GDB Server, so no manual intervention (except the power-on of the RP) is needed anymore.
+We need to install some extra software from ST on this RP to be able to connect to this RP over the network from the STM32CubeIDE installed on our laptop. All the required software needed on the RP is bundled in one, free to download official package called STM32CubeCLT.<br>
+Now, there is good news and some... not so good news about this.<br>
+The good news is, there is a Linux (deb) version available.<br>
+The 'not so good' news is that it is only available for x64 CPU architecture and my RP5 has a quad-core 64-bit Arm Cortex-A76 processor clocked at 2.4GHz (RP Zero 2W has a quad-core 64-bit ARM Cortex-A53 processor clocked at 1GHz) which uses the AArch64 / ARM64 CPU architecture. (It looks like all RP's till now uses this architecture too.)<br>
+As I found in several forums, ST is not planning to publish ARM64 releases of their developing software any time soon. So this is an issue as ARM64 is not compatible with software compiled for x64 CPU's. But only at first sight... It seems that you can emulate a x64 environment to run x64 applications within an ARM64 CPU architecture with BOX64. So all hope is not lost.<br>
+After all software is installed, you need to start the ST-Link GDB Server environment on the RP. This is, in short, the environment the STM32CubeIDE, installed on your computer, will connect to to upload and debug your project. I would prefer to connect all hardware to the RP, power it up and that's it. So after the installation I will configure Linux to automatically start the ST-Link GDB Server. This way, no manual intervention (except the power-on of the RP) is needed anymore.
 
 ## Difference between ST-LINK Server and ST-Link GDB Server
 When I initially started with this setup I didn't realise there was a difference between ST-LINK Server and ST-Link GDB Server which was quite confusing.
@@ -178,10 +182,10 @@ sudo reboot
 ```
 
 ### 3. Install BOX64
-I followed the instructions on [Run x64 Software on a Raspberry Pi using Box64](https://pimylifeup.com/raspberry-pi-x64/) using the latest version (v0.3.4) at the time of writing.
+I followed the instructions on [Run x64 Software on a Raspberry Pi using Box64](https://pimylifeup.com/raspberry-pi-x64/) using the latest version (v0.3.4) at the time of writing.<br>
 These instructions are tested on a RP5 / 8GB.
 > [!NOTE]
->The RP Zero 2W only has 512MB SDRAM which seems to be too less to get Box64 compiled and/or installed without some extra tweaks.<br>
+>The RP Zero 2W only has 512MB SDRAM which seems to be too less to get BOX64 compiled and/or installed without some extra tweaks.<br>
 >I will add extra instructions on how I got it working, on the end of this chapter.
 
 #### 3.1 Installing requirements
@@ -191,10 +195,10 @@ While executing:
 sudo apt install git build-essential cmake
 ```
 you get the info that the build-essential package is already installed by default on the Raspberry Pi OS Lite (64-bit). So only git and cmake are installed.
-After the installation of Box64 is completed, they are not needed anymore and you can remove git and cmake if you do not want to have any unneeded extra packages installed. This will be handled in chapter; 'Remove git and cmake (Optional)' later on.
+After the installation of BOX64 is completed, they are not needed anymore and you can remove git and cmake if you do not want to have any unneeded extra packages installed. This will be handled in chapter; 'Remove git and cmake (Optional)' later on.
 
-#### 3.2 Download the source files of Box64
-Download the latest version of Box64 from GitHub.
+#### 3.2 Download the source files of BOX64
+Download the latest version of BOX64 from GitHub.
 ```bash
 git clone https://github.com/ptitSeb/box64.git
 ```
@@ -204,7 +208,7 @@ cd ~/box64
 mkdir build
 cd build
 ```
-#### 3.4 Generate configuration files for the compilation of Box64
+#### 3.4 Generate configuration files for the compilation of BOX64
 For RP5 (Using 16k Page Size = preferred)<br> 
 ```bash
 cmake .. -DRPI5ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
@@ -218,17 +222,17 @@ cmake .. -DRPI4ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake .. -DRPI3ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
 ```
 
-#### 3.5 Start the compilation of Box64
+#### 3.5 Start the compilation of BOX64
 ```bash
 make -j$(nproc)
 ```
 
-#### 3.6 Install Box64
-Start the actual installation of Box64
+#### 3.6 Install BOX64
+Start the actual installation of BOX64
 ```bash
 sudo make install
 ```
-You need to make your RP aware of the presence of the installation of Box64 by restarting the 'systemd-binfmt' service
+You need to make your RP aware of the presence of the installation of BOX64 by restarting the 'systemd-binfmt' service
 ```bash
 sudo systemctl restart systemd-binfmt
 ```
@@ -237,7 +241,7 @@ or just reboot your RP
 sudo reboot
 ```
 > [!CAUTION]
-If you receive the following error message when you reinstalled the OS using the previous compiled files of Box64 and you want to continue the installation with `sudo make install`:
+If you receive the following error message when you reinstalled the OS using the previous compiled files of BOX64 and you want to continue the installation with `sudo make install`:
 >```
 >make: /usr/bin/cmake: No such file or directory
 >make: *** [Makefile:11108: cmake_check_build_system] Error 127
@@ -249,11 +253,11 @@ If you receive the following error message when you reinstalled the OS using the
 >```
 
 #### 3.7 Copy the compiled files to PC for later usage (Optional)
-If you want to, you can copy the compiled files to your pc for later usage so that if you want to install Box64 again on the same type of RP, you do not need to install git and do the whole download and compilation process all over.
+If you want to, you can copy the compiled files to your pc for later usage so that if you want to install BOX64 again on the same type of RP, you do not need to install git and do the whole download and compilation process all over.
 This can be done in several ways eg:
 
-##### 3.7.1 Copy the Box64 dir over to your PC (Optional)
-Copy the Box64 directory on the RP home dir to your PC:<br>
+##### 3.7.1 Copy the BOX64 dir over to your PC (Optional)
+Copy the BOX64 directory on the RP home dir to your PC:<br>
 In PowerShell (PC):
 ```powershell
 scp -r pi@raspberrypi01:~/box64 c:\temp
@@ -269,8 +273,8 @@ In PowerShell (PC):
 ```powershell
 scp -r "C:\temp\Raspberry Pi\RP5\box64" pi@raspberrypi01:~/
 ```
-##### 3.7.2 Compress the Box64 dir and copy it over to your PC (Optional)
-You can also compress the box64 directory and all its contents first and then copy that compressed file over to your PC
+##### 3.7.2 Compress the BOX64 dir and copy it over to your PC (Optional)
+You can also compress the BOX64 directory and all its contents first and then copy that compressed file over to your PC
 ```bash
 cd ~
 7z a -r -mmt=on box64.7z ~/box64/*
@@ -292,19 +296,107 @@ Then uncompress the file
 rm box64.7z
 ```
 #### 3.8 Remove git and cmake (Optional) 
-After the installation of Box64, git and cmake are not needed anymore and you can remove them if you do not want to have any unneeded extra packages installed.
+After the installation of BOX64, git and cmake are not needed anymore and you can remove them if you do not want to have any unneeded extra packages installed.
 ```bash
 sudo apt purge git cmake
 sudo apt autoremove
 sudo apt clean
 ```
-#### 3.9 Remove the source and compiled Box64 files (Optional) 
-After the installation of Box64 is completed, you can remove the directory /home/pi/box64 and its contents
+#### 3.9 Remove the source and compiled BOX64 files (Optional) 
+After the installation of BOX64 is completed, you can remove the directory /home/pi/box64 and its contents
 ```bash
 cd ~
 sudo rm -r box64
 ```
 #### 3.10 Extra steps for RaspBerry Pi Zero 2W
+I was not able to compile and install BOX64 out of the box on a RP Zero 2W. It seems to have way to less SDRAM (512MB) to get this done.<br>
+
+##### On a RP5
+To get the compilation step done, I've used an RP5 with 8GB of SDRAM. On this RP5 I followed the above procedure to get BOX64 installed with some exceptions.<br>
+In short, I've:
+- Cloned a fresh copy of BOX64 from GitHub.
+- Created the directory structure as described.
+- Generated the configuraton files and used the RP Zero 2W setting
+```bash
+cmake .. -DRPI3ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+```
+- Started the compilation process for the Raspbery Pi Zero 2W CPU on the RP5.
+- Copied the ~/box64 (containting the compiled files) over the the Raspberry Pi Zero 2W
+
+##### Install ZRAM on Raspberry Pi Zero 2W
+Then on the Raspberry Pi Zero 2W, I've installed ZRAM on the RaspBerry Pi Zero 2W to squeeze some more memory usage out of those 512MB SDRAM.
+```bash
+sudo apt install zram-tools
+```
+you can change the compression algorithm in the `zramswap` file, but in the end I left everything default.
+```bash
+sudo nano /etc/default/zramswap
+```
+If you made any changes on the compression algorith, you have to make those active by restarting `zramswap`
+```bash
+sudo zramswap restart
+```
+You can check which algorithm is active while the ZRAM module is loaded, in the comp_algorithm file. The active algorithm is within []. 
+```bash
+nano /sys/block/zram0/comp_algorithm
+```
+ZRAM is used next to the default swap files.
+to check if ZRAM has an higher priority thant the swap file, use:
+```bash
+swapon --show
+```
+The default settings should be fine. That is ZRAM should have a higher priority (default 100) then the swap file (default -2).
+
+##### Temp increase the swapfile size on the Raspberry Pi Zero 2W
+By default, the swap file is set to 512MB. I've increased the size to 2048MB by
+
+###### Turn off the current swap file
+```bash
+sudo dphys-swapfile swapoff
+```
+###### Edit the swap configuration file
+```bash
+sudo nano /etc/dphys-swapfile
+```
+- Look for the line:
+  ```bash
+  CONF_SWAPSIZE=512
+  ```
+- Change `512` to `2048` (e.g., `CONF_SWAPSIZE=2048` for 2GB)
+
+###### Save and exit
+- Press `CTRL + X`, then `Y`, then `Enter`
+
+###### Reinitialize the swap file
+```bash
+sudo dphys-swapfile setup
+```
+
+###### Turn swap back on
+```bash
+sudo dphys-swapfile swapon
+```
+
+###### Reboot (Optional)
+```bash
+sudo reboot
+```
+##### Install BOX64
+Use the same isntructions as described above.
+The installation process may take a few hours. If you do this over SSH and your connection might be interrupted, then all processes started from that ssh sesson are also terminated. So be sure you check the power settings of your computer on which you initiated the SSH session that it will not shut down after X hours.
+You can also try to run it on your RP Zero 2W with a keyboard and HDMI screen directly connected so you might not have the SSH session disconnect issue as everything is done directly in tty in this way.
+> [!TIP]
+> If this process might fail, you can restart it and it will continue at the latest reached 'checkpoint' it previously made.
+
+> [!TIP]
+> If it fails due to an 'out of memory' issue you can check it after the failure (without rebooting the RP) by typing:<br>
+>```bash
+>dmesg | tail
+>```
+>This then gives the 'out of memory' message if it was the cause of the failure.
+
+##### Set swap file size back to default.
+The same way as you increased the swap file, but now set it from 2048 back to 512
 
 
 
