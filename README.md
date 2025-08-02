@@ -348,6 +348,11 @@ to check if ZRAM has an higher priority thant the swap file, use:
 ```bash
 swapon --show
 ```
+You can get some more info about ZRAM status by
+```bash
+zramctl
+```
+
 The default settings should be fine. That is ZRAM should have a higher priority (default 100) then the swap file (default -2).
 
 ##### Temp increase the swapfile size on the Raspberry Pi Zero 2W
