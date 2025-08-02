@@ -1280,6 +1280,13 @@ If you need a development tool chain, you can try binutils-arm-none-eabi. (sudo 
 
 <hr style="border-top:3px double #666; margin:1em 0;">
 
+## 📜 Change History
+
+| Date       | Description                          |
+|------------|--------------------------------------|
+| 2025-07-28 | Initial public release               |
+| 2025-08-02 | Added instructions for RP Zero 2W    |
+
 
 
 
