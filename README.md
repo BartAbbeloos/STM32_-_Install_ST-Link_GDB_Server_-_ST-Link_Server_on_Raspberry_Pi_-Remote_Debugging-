@@ -18,8 +18,8 @@ This is a somewhat bulky solution as you always need the USB port of your PC/lap
 In case something goes electrically wrong, you are at risk of damaging the internal USB port of your PC/laptop.<br>
 I think it would be nice/handy if you could connect the STM32 development board in some way to your local network and use STM32CubeIDE, that is installed on your development PC, to connect remotly over the LAN, to that STM32 development board to upload and debug your projects. That all without connecting any extra hardware directly to your PC over USB.
 
-Sure, there are probably many easy ways to accomplish this, like installing STM32CubeCLT to a dedicated old x64 PC you might have laying around, gathering dust in the corner. But I recently bought a RaspBerry Pi 5 (RP5) 8GB and was wondering if I could use this instead. Not much memory is used during operation, so I guess that other versions with less memory might also work, but this is not yet tested...
-A RP is relative cheap, small and consumes almost no power compared to a dedicated PC. It also has 5v and 3.3v output pins you can directly use to power your development board etc and it also has some extra onboard GPIO pins you can play around with if you ever feel the need for it (more like an optional bonus for free that comes along with it). If something goes wrong in your project, like a short circuit that releases the 'magic smoke', only your RP is at risk and this is relative cheap to replace compared to a PC.
+Sure, there are probably many easy ways to accomplish this, like installing STM32CubeCLT to a dedicated old x64 PC you might have laying around, gathering dust in the corner. But I recently bought a RaspBerry Pi 5 (RP5) 8GB and was wondering if I could use this instead. Not much memory is used during operation. I've even managed to get it also working on the RaspBerry Pi Zero 2W with only 512MB SDRAM. But some extra steps are required to get the installation process working (which are described furhter on in this document).
+A RP is relative cheap (especially the RaspBerry Pi Zero 2W), small and consumes almost no power compared to a dedicated PC. It also has 5v and 3.3v output pins you can directly use to power your development board etc and it also has some extra onboard GPIO pins you can play around with if you ever feel the need for it (more like an optional bonus for free that comes along with it). If something goes wrong in your project, like a short circuit that releases the 'magic smoke', only your RP is at risk and this is relative cheap to replace compared to a PC.
 So, let's give it a shot...
 
 > [!WARNING]
@@ -32,7 +32,7 @@ I'm also not professional Embedded Systems Engineer, just a humble wannabe who i
 The STM32 development board (eg the Blue Pill, Black Pill or whatever) is connected through an ST-Link V2 or ST-Link V3 MINIE to the USB port of the RP. Other debuggers or programmers might also work but I've not tested them yet.
 On the RP, the official Raspberry Pi OS Lite (64-bit) is installed. It will also work with the Raspberry Pi OS Full (64-bit) version (and probably with other Linux distro's too). But as a Linux newbee, I like the challenge to use the Lite version, that is without the desktop, just for the fun of it. (Or to keep the setup minimal and lean, if you do not see the 'fun' in this part.) By using the official Raspberry Pi OS (Debian based as far as I know), I am sure that all the RP hardware is (or should be) fully supported.
 The RP is connected to the network over Wifi or by using an UTP Cable directly connected. I prefer a wired connection, so that is what I used.
-We need to install some extra software from ST on this RP to be able to connect to this RP over the network from the STM32CubeIDE installed on our laptop. All the required software needed on the RP is bundled in one, free to download official package called STM32CubeCLT. Now, there is good news and some... not so good news about this. The good news is, there is a Linux (deb) version available. The 'not so good' news is that it is only available for x64 CPU architecture and my RP5 has a quad-core 64-bit Arm Cortex-A76 processor which uses the AArch64 / ARM64 CPU architecture. (It looks like all RP's till now uses this architecture too.) As I found in several forums, ST is not planning to publish ARM64 releases of their developing software any time soon. So this is an issue as ARM64 is not compatible with software compiled for x64 CPU's. But only at first sight... It seems that you can emulate a x64 environment to run x64 applications within an ARM64 CPU architecture with BOX64. So all hope is not lost.
+We need to install some extra software from ST on this RP to be able to connect to this RP over the network from the STM32CubeIDE installed on our laptop. All the required software needed on the RP is bundled in one, free to download official package called STM32CubeCLT. Now, there is good news and some... not so good news about this. The good news is, there is a Linux (deb) version available. The 'not so good' news is that it is only available for x64 CPU architecture and my RP5 has a quad-core 64-bit Arm Cortex-A76 processor clocked at 2.4GHz (RP Zero 2W has a quad-core 64-bit ARM Cortex-A53 processor clocked at 1GHz) which uses the AArch64 / ARM64 CPU architecture. (It looks like all RP's till now uses this architecture too.) As I found in several forums, ST is not planning to publish ARM64 releases of their developing software any time soon. So this is an issue as ARM64 is not compatible with software compiled for x64 CPU's. But only at first sight... It seems that you can emulate a x64 environment to run x64 applications within an ARM64 CPU architecture with BOX64. So all hope is not lost.
 After all software is installed, you need to start the ST-Link GDB Server environment on the RP. This is, in short, the environment the STM32CubeIDE, installed on your computer, will connect to to upload and debug your project. I would prefer to connect everything to the RP, power it up and that's it. So after the installation I will configure Linux to automatically start the ST-Link GDB Server, so no manual intervention (except the power-on of the RP) is needed anymore.
 
 ## Difference between ST-LINK Server and ST-Link GDB Server
@@ -179,7 +179,10 @@ sudo reboot
 
 ### 3. Install BOX64
 I followed the instructions on [Run x64 Software on a Raspberry Pi using Box64](https://pimylifeup.com/raspberry-pi-x64/) using the latest version (v0.3.4) at the time of writing.
-<!-- Misschien toch de stappen kort beschrijven -->
+These instructions are tested on a RP5 / 8GB.
+> [!NOTE]
+>The RP Zero 2W only has 512MB SDRAM which seems to be too less to get Box64 compiled and/or installed without some extra tweaks.<br>
+>I will add extra instructions on how I got it working, on the end of this chapter.
 
 #### 3.1 Installing requirements
 You need the git, build-essental and cmake package.
@@ -233,7 +236,7 @@ or just reboot your RP
 ```bash
 sudo reboot
 ```
->[!CAUTION]
+> [!CAUTION]
 If you receive the following error message when you reinstalled the OS using the previous compiled files of Box64 and you want to continue the installation with `sudo make install`:
 >```
 >make: /usr/bin/cmake: No such file or directory
@@ -301,6 +304,9 @@ After the installation of Box64 is completed, you can remove the directory /home
 cd ~
 sudo rm -r box64
 ```
+#### 3.10 Extra steps for RaspBerry Pi Zero 2W
+
+
 
 ### 4. Install STM32CubeCLT, Configure ST-Link GDB server / ST-LINK Server
 
